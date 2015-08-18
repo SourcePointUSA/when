@@ -6,6 +6,37 @@
  * @author Brian Cavalier
  * @author John Hann
  */
+
+// Production steps of ECMA-262, Edition 5, 15.4.4.21
+// Reference: http://es5.github.io/#x15.4.4.21
+var sealed_reduce = function(array, callback /*, initialValue*/) {
+'use strict';
+	if (array == null) {
+	  throw new TypeError('Array.prototype.reduce called on null or undefined');
+	}
+	if (typeof callback !== 'function') {
+	  throw new TypeError(callback + ' is not a function');
+	}
+	var t = Object(array), len = t.length >>> 0, k = 0, value;
+	if (arguments.length == 2) {
+	  value = arguments[1];
+	} else {
+	  while (k < len && !(k in t)) {
+	    k++; 
+	  }
+	  if (k >= len) {
+	    throw new TypeError('Reduce of empty array with no initial value');
+	  }
+	  value = t[k++];
+	}
+	for (; k < len; k++) {
+	  if (k in t) {
+	    value = callback(value, t[k], k, t);
+	  }
+	}
+	return value;
+};
+
 (function(define) { 'use strict';
 define(function (require) {
 
@@ -20,9 +51,9 @@ define(function (require) {
 	var unhandledRejection = require('./lib/decorators/unhandledRejection');
 	var TimeoutError = require('./lib/TimeoutError');
 
-	var Promise = [array, flow, fold, generate, progress,
-		inspect, withThis, timed, unhandledRejection]
-		.reduce(function(Promise, feature) {
+	var Promise = sealed_reduce([array, flow, fold, generate, progress,
+		inspect, withThis, timed, unhandledRejection],
+		function(Promise, feature) {
 			return feature(Promise);
 		}, require('./lib/Promise'));
 
