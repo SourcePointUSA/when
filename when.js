@@ -18,7 +18,7 @@ var sealed_reduce = function(array, callback /*, initialValue*/) {
 	  throw new TypeError(callback + ' is not a function');
 	}
 	var t = Object(array), len = t.length >>> 0, k = 0, value;
-	if (arguments.length == 2) {
+	if (arguments.length == 3) {
 	  value = arguments[1];
 	} else {
 	  while (k < len && !(k in t)) {
