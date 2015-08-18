@@ -19,7 +19,7 @@ var sealed_reduce = function(array, callback /*, initialValue*/) {
 	}
 	var t = Object(array), len = t.length >>> 0, k = 0, value;
 	if (arguments.length == 3) {
-	  value = arguments[1];
+	  value = arguments[2];
 	} else {
 	  while (k < len && !(k in t)) {
 	    k++; 
